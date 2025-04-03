@@ -3,8 +3,6 @@ name: Build Gradle And Push Docker Image
 on:
   push:
     branches: ["main"]
-  pull_request:
-    branches: ["main"]
 
 jobs:
   build-gradle:
@@ -22,7 +20,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: "21"
-          distribution: "jetbrains"
+          distribution: "termuin"
 
       - name: Give execute permission to Gradle wrapper
         run: chmod +x ./gradlew
@@ -37,7 +35,7 @@ jobs:
       #     echo "spring.config.import=classpath:application-secret.properties" > ./src/main/resources/application.properties
 
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew clean build
 
       - name: Set image tag
         id: timestamp
@@ -47,7 +45,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: build-output
-          path: build/libs/*.jar
+          path: build/libs/feelody-backend-latest.jar
 
   docker-publish-to-gcp:
     needs: build-gradle
@@ -81,21 +79,3 @@ jobs:
       - name: Push image to Artifact Registry
         run: |
           docker push asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT_NAME }}/${{ secrets.GCP_AR_NAME }}/feelody:latest
-
-  dependency-submission:
-    needs: docker-publish-to-gcp
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up JDK 21
-        uses: actions/setup-java@v4
-        with:
-          java-version: "21"
-          distribution: "jetbrains"
-
-      - name: Generate and submit dependency graph
-        uses: gradle/actions/dependency-submission@v4
