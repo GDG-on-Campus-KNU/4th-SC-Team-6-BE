@@ -1,0 +1,65 @@
+name: Test on PR
+
+on:
+  pull_request:
+    branches: [ 'main', 'develop' ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-request: write
+      checks: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Set up properties
+        if: ${{ secrets.APPLICATION_TEST != '' }}
+        run: |
+          mkdir -p ./src/test/resources
+          echo "${{ secrets.APPLICATION_TEST }}" > ./src/test/resources/application-test.properties
+
+      - name: Gradle Caching
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runners.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runners.os }}-gradle-
+
+      - name: Test with Gradle Wrapper
+        id: gradle-test
+        run: |
+          chmod +x ./gradlew
+          ./gradlew clean jacocoTestReport
+
+      - name: Show test result
+        uses: EnricoMi/publish-unit-test-result-action@v2.19.0
+        if: always()
+        with:
+          files: '**/build/test-results/test/TEST-*.xml'
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Add comments for failed code
+        uses: mikepenz/action-junit-report@v5
+        if: failure()
+        with:
+          files: '**/build/test-results/test/TEST-*.xml'
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Add coverage to PR
+        id: jacoco
+        uses: madrapps/jacoco-report@v1.7.1
+        with:
+          paths: ${{ github.workspace }}/build/reports/jacoco/test/jacocoTestReport.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
