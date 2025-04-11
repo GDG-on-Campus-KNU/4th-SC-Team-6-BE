@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.4.3'
 	id 'io.spring.dependency-management' version '1.1.7'
+	id 'jacoco'
 }
 
 group = 'com.feelody'
@@ -11,6 +12,33 @@ java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(21)
 	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+jacocoTestReport {
+	dependsOn tasks.test
+
+	reports {
+		html.required = true
+		xml.required = true
+		csv.required = false
+	}
+
+	def excludes = [
+			"**/controller/*",
+			"**/dto/*",
+			"**/global/*",
+			"**/Application.class"
+	]
+
+	classDirectories.setFrom(
+			sourceSets.main.output.asFileTree.matching {
+				exclude(excludes)
+			}
+	)
 }
 
 configurations {
