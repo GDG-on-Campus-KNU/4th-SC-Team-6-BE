@@ -7,6 +7,8 @@ on:
 jobs:
   build-gradle:
     runs-on: ubuntu-22.04
+    env:
+      GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
     permissions:
       contents: read
 
