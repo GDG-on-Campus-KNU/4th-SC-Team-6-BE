@@ -79,7 +79,7 @@ public class FeedbackService {
         contentConn.setRequestProperty("Content-Type", "application/json");
         contentConn.setDoOutput(true);
 
-        sendReqeustToGoogle(contentConn, prompt);
+        sendRequestToGoogle(contentConn, prompt);
 
         ObjectMapper mapper = new ObjectMapper();
         JsonNode root = mapper.readTree(contentConn.getInputStream());
@@ -106,7 +106,7 @@ public class FeedbackService {
         startConn.setDoOutput(true);
 
         String json = "{\"file\":{\"display_name\":\"AUDIO\"}}";
-        sendReqeustToGoogle(startConn, json);
+        sendRequestToGoogle(startConn, json);
 
         Map<String, List<String>> headers = startConn.getHeaderFields();
         return headers.entrySet().stream()
@@ -117,7 +117,7 @@ public class FeedbackService {
                 .orElseThrow(() -> new RuntimeException("Upload URL not found"));
     }
 
-    private static void sendReqeustToGoogle(HttpURLConnection startConn, String message) throws IOException {
+    private static void sendRequestToGoogle(HttpURLConnection startConn, String message) throws IOException {
         try (OutputStream os = startConn.getOutputStream()) {
             os.write(message.getBytes());
         }
