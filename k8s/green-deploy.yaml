@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: feelody-back
-          image: {TODO}
+          image: asia-northeast3-docker.pkg.dev/feelody-458710/feelody-backend:green
           ports:
             - containerPort: 8080
 
