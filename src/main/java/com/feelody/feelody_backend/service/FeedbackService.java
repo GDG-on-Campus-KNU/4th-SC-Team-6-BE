@@ -56,13 +56,13 @@ public class FeedbackService {
 
         Feedback saved = feedbackRepository.save(feedback);
 
-        return FeedbackRespDto.builder()
-                .id(saved.getId())
-                .title(saved.getTitle())
-                .artist(saved.getArtist())
-                .score(saved.getScore())
-                .createdAt(saved.getCreatedAt().toLocalDate())
-                .build();
+        return new FeedbackRespDto(
+                saved.getId(),
+                saved.getTitle(),
+                saved.getArtist(),
+                saved.getScore(),
+                saved.getCreatedAt().toLocalDate()
+        );
     }
 
     private int doGemini(String prompt) throws IOException {
