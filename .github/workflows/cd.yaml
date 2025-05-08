@@ -49,6 +49,6 @@ jobs:
       - name: Switch service selector to new color
         run: |
           NEW_COLOR=${{ steps.detect.outputs.target_color }}
-          sed -i "s/color: .*/color: $NEW_COLOR/" k8s/service.yaml
+          sed -i "/spec:/,/selector:/s/color: .*/color: $NEW_COLOR/" k8s/service.yaml
           kubectl apply -f k8s/service.yaml
 
