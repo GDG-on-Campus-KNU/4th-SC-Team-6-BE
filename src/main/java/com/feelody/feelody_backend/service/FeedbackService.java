@@ -10,10 +10,14 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,16 +38,7 @@ public class FeedbackService {
     private final String GOOGLE_API_KEY = System.getenv("GOOGLE_API_KEY");
 
     public FeedbackRespDto geminiAnalyze(MultipartFile audio) throws IOException {
-        final String command = """
-                {
-                  "contents": [{
-                    "parts": [
-                      {"text": "이 오디오 클립은 음악 연주입니다. 이 연주에 대해 다음과 같은 기준으로 평가해주세요: ① 정확도, ② 표현력, ③ 리듬 감각, ④ 음정. 총 점수(100점 만점)만 정수 형태로 제공해주세요."},
-                      {"file_data": {"mime_type": "%s", "file_uri": "%s"}}
-                    ]
-                  }]
-                }
-                """;
+        final String command = getPrompt();
 
         String mimeType = audio.getContentType() != null ? audio.getContentType() : null;
         String numBytes = String.valueOf(audio.getSize());
@@ -56,7 +51,7 @@ public class FeedbackService {
         Feedback feedback = Feedback.builder()
                 .title("제목")
                 .artist("아티스트")
-                .score(Integer.parseInt(doGemini(prompt)))
+                .score(doGemini(prompt))
                 .build();
 
         Feedback saved = feedbackRepository.save(feedback);
@@ -70,7 +65,7 @@ public class FeedbackService {
                 .build();
     }
 
-    private String doGemini(String prompt) throws IOException {
+    private int doGemini(String prompt) throws IOException {
         String analyzeUrl =
                 "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key="
                         + GOOGLE_API_KEY;
@@ -83,14 +78,17 @@ public class FeedbackService {
 
         ObjectMapper mapper = new ObjectMapper();
         JsonNode root = mapper.readTree(contentConn.getInputStream());
-        log.info("Response: {}", root.toPrettyString());
-        return root.path("candidates")
+
+        String text = root.path("candidates")
                 .get(0)
                 .path("content")
                 .path("parts")
                 .get(0)
                 .path("text")
                 .asText();
+
+        JsonNode innerJson = mapper.readTree(text);
+        return innerJson.path("score").asInt();
     }
 
     private String getUploadUrl(String numBytes, String mimeType) throws IOException {
@@ -144,5 +142,23 @@ public class FeedbackService {
         JsonNode fileJson = mapper.readTree(uploadConn.getInputStream());
 
         return fileJson.path("file").path("uri").asText();
+    }
+
+    private String getPrompt() {
+        try {
+            StringBuilder sb = new StringBuilder();
+            ClassPathResource resource = new ClassPathResource("prompt.txt");
+            Path path = Paths.get(resource.getURI());
+
+            List<String> lines = Files.readAllLines(path);
+            for (String line : lines) {
+                sb.append(line);
+            }
+
+            return sb.toString();
+        } catch (IOException e) {
+            log.error("Error reading prompt template", e);
+            throw new RuntimeException("Error reading prompt txt file", e);
+        }
     }
 }
