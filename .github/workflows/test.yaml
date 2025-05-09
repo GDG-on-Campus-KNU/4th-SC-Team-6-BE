@@ -23,11 +23,11 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: Set up properties
-        if: ${{ secrets.APPLICATION_TEST != '' }}
-        run: |
-          mkdir -p ./src/test/resources
-          echo "${{ secrets.APPLICATION_TEST }}" > ./src/test/resources/application-test.properties
+#      - name: Set up properties
+#        if: always
+#        run: |
+#          mkdir -p ./src/test/resources
+#          echo "${{ secrets.APPLICATION_TEST }}" > ./src/test/resources/application-test.properties
 
       - name: Gradle Caching
         uses: actions/cache@v3
