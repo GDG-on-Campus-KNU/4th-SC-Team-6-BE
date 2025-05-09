@@ -62,7 +62,7 @@ jobs:
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
-          credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_FOR_AR_KEY }}
+          credentials_json: ${{ secrets.GCP_AR_KEY }}
 
       - name: Configure Docker for Artifact Registry
         run: gcloud auth configure-docker asia-northeast3-docker.pkg.dev
@@ -74,8 +74,8 @@ jobs:
       - name: Tag image for Artifact Registry
         run: |
           docker tag feelody:${{ needs.build-gradle.outputs.image_tag }} \
-          asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT_NAME }}/${{ secrets.GCP_AR_NAME }}/feelody:latest
+          asia-northeast3-docker.pkg.dev/feelody-458710/feelody-backend:${{ needs.build-gradle.outputs.image_tag }}
 
       - name: Push image to Artifact Registry
         run: |
-          docker push asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT_NAME }}/${{ secrets.GCP_AR_NAME }}/feelody:latest
+          docker push asia-northeast3-docker.pkg.dev/feelody-458710/feelody-backend:${{ needs.build-gradle.outputs.image_tag }}
