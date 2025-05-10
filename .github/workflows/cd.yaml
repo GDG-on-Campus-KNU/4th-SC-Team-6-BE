@@ -1,0 +1,54 @@
+name: Deploy to GKE
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tags:
+        description: 'Docker Image Tags'
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Authentication to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_CD_KEY }}
+
+      - name: Configure kubectl
+        runs: |
+          gcloud container clusters get-credentials dev-cluster \
+            --region asia-northeast3 \
+            --project feelody-458710
+
+      - name: Detect current live color
+        id: detect
+        run: |
+          CURRENT_COLOR=$(kubectl get svc feelody-back -o jsonpath='{.spec.selector.color}')
+          if [ "$CURRENT_COLOR" = "blue" ]; then
+            echo "target_color=green" >> $GITHUB_OUTPUT
+          else
+            echo "target_color=blue" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Set image in kustomize
+        run: |
+          cd k8s/${{ steps.detect.outputs.target_color }}
+          kustomize edit set image \
+            asia-northeast3-docker.pkg.dev/feelody-458710/feelody-backend=asia-northeast3-docker.pkg.dev/feelody-458710/feelody-backend:${{ github.event.inputs.image_tag }}
+
+      - name: Apply deployment
+        run: |
+          kubectl apply -k k8s/${{ steps.detect.outputs.target_color }}
+
+      - name: Switch service selector to new color
+        run: |
+          NEW_COLOR=${{ steps.detect.outputs.target_color }}
+          sed -i "/spec:/,/selector:/s/color: .*/color: $NEW_COLOR/" k8s/service.yaml
+          kubectl apply -f k8s/service.yaml
+

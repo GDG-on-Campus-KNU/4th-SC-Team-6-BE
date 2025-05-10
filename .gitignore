@@ -172,3 +172,5 @@ bin/
 ### VS Code ###
 .vscode/
 
+terraform/
+

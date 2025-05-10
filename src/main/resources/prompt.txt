@@ -1,0 +1,27 @@
+{
+                  "contents": [
+                    {
+                      "parts": [
+                        {
+                          "text": "이 오디오 클립은 음악 연주입니다. 이 연주에 대해 다음과 같은 기준으로 평가해주세요:\n\n① 음정: 음정이 정확했는지, 불협화음이나 삑사리는 없었는지, 고음/저음에서의 안정성까지 고려해 평가해주세요.\n② 박자: 리듬과 템포가 정확했는지, 급하거나 느려지는 부분은 없는지, 악절 간 연결이 자연스러운지 분석해주세요."
+                        },
+                        {
+                          "file_data": {
+                            "mime_type": "%s",
+                            "file_uri": "%s"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "generationConfig": {
+                    "responseMimeType": "application/json",
+                    "responseSchema": {
+                      "type": "object",
+                      "properties": {
+                        "score": { "type": "integer" }
+                      },
+                      "required": ["score"]
+                    }
+                  }
+                }
