@@ -2,7 +2,7 @@ name: Build Gradle And Push Docker Image
 
 on:
   push:
-    branches: ["main"]
+    branches: [ "main" ]
 
 jobs:
   build-gradle:
@@ -25,14 +25,10 @@ jobs:
       - name: Give execute permission to Gradle wrapper
         run: chmod +x ./gradlew
 
-      # - name: Create secret properties file
-      #   run: |
-      #     # mkdir -p ./src/main/resources
-      #     # echo "${{ secrets.SPRING_SECRET }}" > ./src/main/resources/application-secret.properties
-
-      # - name: Create application.properties to import secret
-      #   run: |
-      #     echo "spring.config.import=classpath:application-secret.properties" > ./src/main/resources/application.properties
+      - name: Create GCS Key file
+        run: |
+          mkdir -p ./src/main/resources
+          echo "${{ secrets.GCP_GCS_KEY }}" > ./src/main/resources/storage-key.json
 
       - name: Build with Gradle
         run: ./gradlew clean build
