@@ -68,7 +68,8 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
 
     // Google Cloud Storage
-    implementation 'org.springframework.cloud:spring-cloud-gcp-starter-storage'
+    implementation platform('com.google.cloud:libraries-bom:26.59.0')
+    implementation 'com.google.cloud:google-cloud-storage'
 
     // DB
     runtimeOnly 'com.h2database:h2'
