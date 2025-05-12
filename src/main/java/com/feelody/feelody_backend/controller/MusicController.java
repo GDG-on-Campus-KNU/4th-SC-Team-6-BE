@@ -20,8 +20,7 @@ public class MusicController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> uploadMusic(@ModelAttribute MusicUploadRequestDto request) {
-        // TODO: Long id = musicService.uploadMusic(request);
-        Long id = null;
+        Long id = musicService.uploadMusic(request);
         return ResponseEntity.created(URI.create("/api/music/" + id)).build();
     }
 }
