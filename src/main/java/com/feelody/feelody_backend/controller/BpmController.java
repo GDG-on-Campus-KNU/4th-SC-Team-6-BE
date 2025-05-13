@@ -12,14 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class BpmController {
     private final SimpMessagingTemplate messagingTemplate;
-    private final String destination = "/api/bpm/wearable/notification";
+    private final String destination = "/api/bpm/wearable";
 
     @PostMapping("/start")
     public String doMetronome(@RequestBody Integer bpm) {
-        //신호를 받아서 BPM를 워치에 전달한다.
-
         messagingTemplate.convertAndSend(destination, bpm);
-
         return "BPM data";
     }
 
