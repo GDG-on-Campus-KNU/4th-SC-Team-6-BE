@@ -15,9 +15,9 @@ spec:
         app: spring
         color: blue
     spec:
+      serviceAccountName: feelody-k8s-sa
       containers:
         - name: feelody-back
           image: asia-northeast3-docker.pkg.dev/feelody-458710/feelody-backend:blue
           ports:
             - containerPort: 8080
-
