@@ -14,14 +14,9 @@ public class BpmController {
     private final SimpMessagingTemplate messagingTemplate;
     private final String destination = "/api/bpm/wearable";
 
-    @PostMapping("/start")
+    @PostMapping()
     public String doMetronome(@RequestBody Integer bpm) {
         messagingTemplate.convertAndSend(destination, bpm);
         return "BPM data";
-    }
-
-    @PostMapping("/stop")
-    public void sendNotification() {
-        messagingTemplate.convertAndSend(destination, 0);
     }
 }
