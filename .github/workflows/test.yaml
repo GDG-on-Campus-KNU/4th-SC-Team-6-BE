@@ -23,11 +23,11 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-#      - name: Set up properties
-#        if: always
-#        run: |
-#          mkdir -p ./src/test/resources
-#          echo "${{ secrets.APPLICATION_TEST }}" > ./src/test/resources/application-test.properties
+      #      - name: Set up properties
+      #        if: always
+      #        run: |
+      #          mkdir -p ./src/test/resources
+      #          echo "${{ secrets.APPLICATION_TEST }}" > ./src/test/resources/application-test.properties
 
       - name: Gradle Caching
         uses: actions/cache@v3
@@ -43,7 +43,7 @@ jobs:
         id: gradle-test
         run: |
           chmod +x ./gradlew
-          ./gradlew clean jacocoTestReport
+          ./gradlew clean jacocoTestReport -Dspring.profiles.active=test
 
       - name: Show test result
         uses: EnricoMi/publish-unit-test-result-action@v2.19.0

@@ -2,7 +2,7 @@ name: Build Gradle And Push Docker Image
 
 on:
   push:
-    branches: ["main"]
+    branches: [ "main" ]
 
 jobs:
   build-gradle:
@@ -27,39 +27,12 @@ jobs:
       - name: Give execute permission to Gradle wrapper
         run: chmod +x ./gradlew
 
-      # - name: Create secret properties file
-      #   run: |
-      #     # mkdir -p ./src/main/resources
-      #     # echo "${{ secrets.SPRING_SECRET }}" > ./src/main/resources/application-secret.properties
-
-      # - name: Create application.properties to import secret
-      #   run: |
-      #     echo "spring.config.import=classpath:application-secret.properties" > ./src/main/resources/application.properties
-
       - name: Build with Gradle
         run: ./gradlew clean build
 
       - name: Set image tag
         id: timestamp
         run: echo "tag=$(date +%s)" >> $GITHUB_OUTPUT
-
-      - name: Upload JAR artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-output
-          path: build/libs/feelody-backend-latest.jar
-
-  docker-publish-to-gcp:
-    needs: build-gradle
-    runs-on: ubuntu-22.04
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Download build artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: build-output
 
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2

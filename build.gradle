@@ -1,82 +1,96 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '3.4.3'
-	id 'io.spring.dependency-management' version '1.1.7'
-	id 'jacoco'
+    id 'java'
+    id 'org.springframework.boot' version '3.4.3'
+    id 'io.spring.dependency-management' version '1.1.7'
+    id 'jacoco'
 }
 
 group = 'com.feelody'
 version = 'latest'
 
 java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(21)
-	}
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
+}
+
+ext {
+    set('springCloudVersion', "2024.0.0")
 }
 
 jacocoTestReport {
-	dependsOn tasks.test
+    dependsOn tasks.test
 
-	reports {
-		html.required = true
-		xml.required = true
-		csv.required = false
-	}
+    reports {
+        html.required = true
+        xml.required = true
+        csv.required = false
+    }
 
-	def excludes = [
-			"**/controller/*",
-			"**/dto/*",
-			"**/global/*",
-			"**/Application.class"
-	]
+    def excludes = [
+            "**/controller/*",
+            "**/dto/*",
+            "**/global/*",
+            "**/Application.class"
+    ]
 
-	classDirectories.setFrom(
-			sourceSets.main.output.asFileTree.matching {
-				exclude(excludes)
-			}
-	)
+    classDirectories.setFrom(
+            sourceSets.main.output.asFileTree.matching {
+                exclude(excludes)
+            }
+    )
 }
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	// Spring Boot
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    // Spring Boot
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
-	// Lombok
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
+    // Lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
 
-	// DB
-	runtimeOnly 'com.h2database:h2'
+    // Google Cloud Storage
+    implementation platform('com.google.cloud:libraries-bom:26.59.0')
+    implementation 'com.google.cloud:google-cloud-storage'
 
-	// Test
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    // DB
+    runtimeOnly 'com.h2database:h2'
+
+    // Test
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
 }
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }

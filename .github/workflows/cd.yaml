@@ -21,7 +21,7 @@ jobs:
           credentials_json: ${{ secrets.GCP_CD_KEY }}
 
       - name: Configure kubectl
-        runs: |
+        run: |
           gcloud container clusters get-credentials dev-cluster \
             --region asia-northeast3 \
             --project feelody-458710
