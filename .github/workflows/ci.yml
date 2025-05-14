@@ -43,13 +43,13 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build . -t feelody:${{ needs.build-gradle.outputs.image_tag }}
+          docker build . -t feelody:${{ steps.timestamp.outputs.tag }}
 
       - name: Tag image for Artifact Registry
         run: |
-          docker tag feelody:${{ needs.build-gradle.outputs.image_tag }} \
-          asia-northeast3-docker.pkg.dev/feelody-458710/feelody-backend:${{ needs.build-gradle.outputs.image_tag }}
+          docker tag feelody:${{ steps.timestamp.outputs.tag }} \
+          asia-northeast3-docker.pkg.dev/feelody-458710/feelody-backend:${{ steps.timestamp.outputs.tag }}
 
       - name: Push image to Artifact Registry
         run: |
-          docker push asia-northeast3-docker.pkg.dev/feelody-458710/feelody-backend:${{ needs.build-gradle.outputs.image_tag }}
+          docker push asia-northeast3-docker.pkg.dev/feelody-458710/feelody-backend:${{ steps.timestamp.outputs.tag }}
