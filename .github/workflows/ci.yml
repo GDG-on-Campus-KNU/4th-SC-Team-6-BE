@@ -12,7 +12,7 @@ jobs:
     permissions:
       contents: read
     outputs:
-      image_tag: ${{ steps.timestamp.outputs.tag }}
+      image_tag: ${{ steps.image_tag.outputs.tag }}
 
     steps:
       - uses: actions/checkout@v4
@@ -30,8 +30,15 @@ jobs:
         run: ./gradlew clean build
 
       - name: Set image tag
-        id: timestamp
-        run: echo "tag=$(date +%s)" >> $GITHUB_OUTPUT
+        id: image_tag
+        run: |
+          CURRENT_TAG=$(kubectl get svc feelody-back -o jsonpath='{.spec.selector.color}')
+
+          if [ "$CURRENT_TAG" = "blue" ]; then
+            NEXT_TAG="green"
+          else
+            NEXT_TAG="blue"
+          fi
 
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
@@ -43,13 +50,13 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build . -t feelody:${{ steps.timestamp.outputs.tag }}
+          docker build . -t feelody:${{ steps.image_tag.outputs.tag }}
 
       - name: Tag image for Artifact Registry
         run: |
-          docker tag feelody:${{ steps.timestamp.outputs.tag }} \
-          asia-northeast3-docker.pkg.dev/feelody-458710/feelody-backend/feelody:${{ steps.timestamp.outputs.tag }}
+          docker tag feelody:${{ steps.image_tag.outputs.tag }} \
+          asia-northeast3-docker.pkg.dev/feelody-458710/feelody-backend/feelody:${{ steps.image_tag.outputs.tag }}
 
       - name: Push image to Artifact Registry
         run: |
-          docker push asia-northeast3-docker.pkg.dev/feelody-458710/feelody-backend/feelody:${{ steps.timestamp.outputs.tag }}
+          docker push asia-northeast3-docker.pkg.dev/feelody-458710/feelody-backend/feelody:${{ steps.image_tag.outputs.tag }}
