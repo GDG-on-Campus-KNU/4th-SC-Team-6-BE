@@ -1,0 +1,119 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-22.04
+    env:
+      GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+    permissions:
+      contents: read
+    outputs:
+      image_tag: ${{ steps.image_tag.outputs.tag }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: "temurin"
+
+      - name: Give execute permission to Gradle wrapper
+        run: chmod +x ./gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew clean build
+
+      - name: Set image tag
+        id: image_tag
+        run: |
+          CURRENT_TAG=$(kubectl get svc feelody-back -o jsonpath='{.spec.selector.color}')
+          if [ "$CURRENT_TAG" = "blue" ]; then
+            NEXT_TAG="green"
+          else
+            NEXT_TAG="blue"
+          fi
+          echo "tag=$NEXT_TAG" >> $GITHUB_OUTPUT
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_AR_KEY }}
+
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker asia-northeast3-docker.pkg.dev
+
+      - name: Build Docker image
+        run: |
+          docker build . -t feelody:${{ steps.image_tag.outputs.tag }}
+
+      - name: Tag image for Artifact Registry
+        run: |
+          docker tag feelody:${{ steps.image_tag.outputs.tag }} \
+          asia-northeast3-docker.pkg.dev/feelody-458710/feelody-backend/feelody:${{ steps.image_tag.outputs.tag }}
+
+      - name: Push image to Artifact Registry
+        run: |
+          docker push asia-northeast3-docker.pkg.dev/feelody-458710/feelody-backend/feelody:${{ steps.image_tag.outputs.tag }}
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Authentication to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_CD_KEY }}
+
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          version: 'latest'
+          service_account_key: ${{ secrets.GCP_CD_KEY }}
+
+      - name: Install gke-gcloud-auth-plugin
+        run: |
+          gcloud components install gke-gcloud-auth-plugin
+          gcloud components update
+
+      - name: Configure kubectl
+        run: |
+          gcloud container clusters get-credentials dev-cluster \
+            --region asia-northeast3-a \
+            --project feelody-458710
+
+      - name: Detect current live color
+        id: detect
+        run: |
+          CURRENT_COLOR=$(kubectl get svc feelody-back -o jsonpath='{.spec.selector.color}')
+          if [ "$CURRENT_COLOR" = "blue" ]; then
+            echo "target_color=green" >> $GITHUB_OUTPUT
+          else
+            echo "target_color=blue" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Set image in kustomize
+        run: |
+          cd k8s/${{ steps.detect.outputs.target_color }}
+          kustomize edit set image \
+            asia-northeast3-docker.pkg.dev/feelody-458710/feelody-backend=asia-northeast3-docker.pkg.dev/feelody-458710/feelody-backend:${{ needs.build-and-push.outputs.image_tag }}
+
+      - name: Apply deployment
+        run: |
+          kubectl apply -k k8s/${{ steps.detect.outputs.target_color }}
+
+      - name: Switch service selector to new color
+        run: |
+          NEW_COLOR=${{ steps.detect.outputs.target_color }}
+          sed -i "/spec:/,/selector:/s/color: .*/color: $NEW_COLOR/" k8s/service.yaml
+          kubectl apply -f k8s/service.yaml
+
