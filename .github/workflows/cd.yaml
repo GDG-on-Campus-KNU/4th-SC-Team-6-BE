@@ -20,10 +20,14 @@ jobs:
         with:
           credentials_json: ${{ secrets.GCP_CD_KEY }}
 
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          version: 'latest'
+          service_account_key: ${{ secrets.GCP_CD_KEY }}
+
       - name: Install gke-gcloud-auth-plugin
         run: |
-          sudo apt-get update
-          sudo apt-get install -y google-cloud-sdk-gke-gcloud-auth-plugin
           gcloud components install gke-gcloud-auth-plugin
           gcloud components update
 
