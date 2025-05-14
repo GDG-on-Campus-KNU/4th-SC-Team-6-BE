@@ -52,4 +52,4 @@ jobs:
 
       - name: Push image to Artifact Registry
         run: |
-          docker push asia-northeast3-docker.pkg.dev/feelody-458710/feelody-backend:${{ steps.timestamp.outputs.tag }}
+          docker push asia-northeast3-docker.pkg.dev/feelody-458710/feelody-backend/feelody:${{ steps.timestamp.outputs.tag }}
