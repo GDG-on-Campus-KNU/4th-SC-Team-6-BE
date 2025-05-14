@@ -39,6 +39,12 @@ jobs:
           gcloud components install gke-gcloud-auth-plugin
           gcloud components update
 
+      - name: Configure kubectl
+        run: |
+          gcloud container clusters get-credentials dev-cluster \
+            --region asia-northeast3-a \
+            --project feelody-458710
+
       - name: Give execute permission to Gradle wrapper
         run: chmod +x ./gradlew
 
