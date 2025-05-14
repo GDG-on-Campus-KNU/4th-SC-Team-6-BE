@@ -139,3 +139,10 @@ jobs:
           sed -i "/spec:/,/selector:/s/color: .*/color: $NEW_COLOR/" k8s/service.yaml
           kubectl apply -f k8s/service.yaml
 
+      - name: Remove old deployment
+        run: |
+          if [[ "${{ steps.image_tag.outputs.tag }}" == "green" ]]; then
+            kubectl delete deploy spring-blue || true
+          else
+            kubectl delete deploy spring-green || true
+          fi
