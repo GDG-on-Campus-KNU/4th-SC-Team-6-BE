@@ -23,7 +23,7 @@ jobs:
       - name: Configure kubectl
         run: |
           gcloud container clusters get-credentials dev-cluster \
-            --region asia-northeast3 \
+            --region asia-northeast3-a \
             --project feelody-458710
 
       - name: Detect current live color
