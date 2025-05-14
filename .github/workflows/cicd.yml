@@ -23,6 +23,22 @@ jobs:
           java-version: "21"
           distribution: "temurin"
 
+      - name: Authentication to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_CD_KEY }}
+
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          version: 'latest'
+          service_account_key: ${{ secrets.GCP_CD_KEY }}
+
+      - name: Install gke-gcloud-auth-plugin
+        run: |
+          gcloud components install gke-gcloud-auth-plugin
+          gcloud components update
+
       - name: Give execute permission to Gradle wrapper
         run: chmod +x ./gradlew
 
