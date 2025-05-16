@@ -21,3 +21,11 @@ spec:
           image: asia-northeast3-docker.pkg.dev/feelody-458710/feelody-backend/feelody:green
           ports:
             - containerPort: 8080
+      readinessProbe:
+        httpGet:
+          path: /
+          port: 8080
+        initialDelaySeconds: 5
+        periodSeconds: 10
+        failureThreshold: 3
+
