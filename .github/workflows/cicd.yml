@@ -45,6 +45,16 @@ jobs:
             --region asia-northeast3-a \
             --project feelody-458710
 
+      - name: Gradle Caching
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
       - name: Give execute permission to Gradle wrapper
         run: chmod +x ./gradlew
 
