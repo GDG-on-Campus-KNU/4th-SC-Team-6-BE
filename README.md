@@ -1,5 +1,6 @@
-![image](https://github.com/user-attachments/assets/f6fbf568-3328-4488-aaf5-86a39890b6b7)
-
+<p align="center">
+  <img src="readme-images/feelodymain.png" alt="Feelody Preview" width="600" style="display:block; margin:auto;" />
+</p
 <br>
 
 # <div align=center> 🎵 Feelody  - Feel your melody
@@ -25,11 +26,14 @@ This tool bridges the gap between **hearing and feeling**, enabling true musical
 
   <h3>Innovate for Wellness</h3>
 
+<p align="center">
   <img 
-    src="https://github.com/user-attachments/assets/3f5c6b3f-462c-4f45-bad8-77c66894fbc5" 
+    src="readme-images/git3.png" 
     alt="Feelody Preview" 
-    width="400"
-/>
+    width="400" 
+    style="display:block; margin:auto;" 
+  />
+</p>
 
   <p>
     Create solutions that improve access to care and enhance patient outcomes.
@@ -43,22 +47,33 @@ This tool bridges the gap between **hearing and feeling**, enabling true musical
 
 <p align="center">
   <img 
-    src="https://github.com/user-attachments/assets/600967b2-7a3d-4bfa-b3d7-942d3e10eb71" 
+    src="readme-images/git4.png" 
     alt="Design Concept" 
-    width="800"
-/>
+    width="800" 
+    style="display:block; margin:auto;" 
+  />
 </p>
+
 
 <br><br>
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/dee3ea08-bf9d-42bc-9a79-d53a6043bce9" alt="Emotional Concept" width="800"/>
+  <img 
+    src="readme-images/git5.png" 
+    alt="Design Concept" 
+    width="800" 
+    style="display:block; margin:auto;" 
+  />
 </p>
-<br><br>
 
 ##  <div align=center> ⭐ Key Features
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/34eb4f06-5e4b-4a61-a47f-1875174a3847" alt="Feelody Preview" width="800"/>
+  <img 
+    src="readme-images/gitkeyfeatures.png" 
+    alt="keyfeatures" 
+    width="800" 
+    style="display:block; margin:auto;" 
+  />
 </p>
 
 -  **Real-time Pitch & Rhythm Feedback**  
@@ -80,7 +95,7 @@ This tool bridges the gap between **hearing and feeling**, enabling true musical
 #  <div align=center> 🛠️ Architecture
 <p align="center">
   <img 
-    src="https://github.com/user-attachments/assets/04c9a602-4c8c-4e0d-aeca-ca9115435017" 
+    src="readme-images/architecture.png" 
     alt="IMG_6867" 
     width="800"
 />
@@ -109,7 +124,13 @@ The React frontend is deployed separately via Vercel, providing fast and optimiz
 
 # <div align=center>  🗂️ ERD Diagram
 
-![asdf](https://github.com/user-attachments/assets/3fd0c6c3-582f-4314-9111-06072a5b3dcd)
+<p align="center">
+  <img 
+    src="readme-images/erd.png" 
+    alt="IMG_6867" 
+    width="800"
+/>
+</p>
 
 <br><br>
 
@@ -133,29 +154,19 @@ The React frontend is deployed separately via Vercel, providing fast and optimiz
 ![GKE](https://img.shields.io/badge/GKE-Google%20Kubernetes%20Engine-blue?logo=googlecloud) ![Docker](https://img.shields.io/badge/Docker-Container-2496ED?logo=docker&logoColor=white) ![Kustomize](https://img.shields.io/badge/Kustomize-YAML--Management-blue?logo=kubernetes) ![kubectl](https://img.shields.io/badge/kubectl-K8s%20CLI-326CE5?logo=kubernetes) 
 
 
-#### Frontend
-![React](https://img.shields.io/badge/React-JS-61DAFB?logo=react) ![TypeScript](https://img.shields.io/badge/TypeScript-Type%20Safe-blue?logo=typescript)  
-![Three.js](https://img.shields.io/badge/Three.js-3D-black?logo=three.js)  
+#### Frontend & Build
+![React](https://img.shields.io/badge/React-JS-61DAFB?logo=react)  ![TypeScript](https://img.shields.io/badge/TypeScript-Type%20Safe-blue?logo=typescript)   ![Three.js](https://img.shields.io/badge/Three.js-3D-black?logo=three.js) ![Vite](https://img.shields.io/badge/Vite-Bundler-646CFF?logo=vite&logoColor=white) ![npm](https://img.shields.io/badge/npm-Package%20Manager-CB3837?logo=npm)  
 
 
 
-####  Build
-![Vite](https://img.shields.io/badge/Vite-Bundler-646CFF?logo=vite&logoColor=white) ![npm](https://img.shields.io/badge/npm-Package%20Manager-CB3837?logo=npm)  
+####  Routing & Styling
+![React Router](https://img.shields.io/badge/React--Router--DOM-Routing-CA4245?logo=reactrouter) ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-Utility--First-38B2AC?logo=tailwindcss)  
 
-
-
-####  Routing
-![React Router](https://img.shields.io/badge/React--Router--DOM-Routing-CA4245?logo=reactrouter)  
 
 
 
 ####  HTTP Client
  ![Axios](https://img.shields.io/badge/Axios-HTTP-blue?logo=axios)  
-
-
-
-####  Styling
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-Utility--First-38B2AC?logo=tailwindcss)  
 
 
 
@@ -182,4 +193,3 @@ The React frontend is deployed separately via Vercel, providing fast and optimiz
 | [<img src="https://avatars.githubusercontent.com/u/119777717?v=4" height="150" width="150" /><br/>@Catsmanager<br/>Frontend](https://github.com/Catsmanager) | [<img src="https://avatars.githubusercontent.com/u/113227805?v=4" height="150" width="150" /><br/>@eelkom<br/>Frontend](https://github.com/eelkom) | [<img src="https://avatars.githubusercontent.com/u/137680080?v=4" height="150" width="150" /><br/>@kdongsu5509<br/>Backend](https://github.com/kdongsu5509) | [<img src="https://avatars.githubusercontent.com/u/103186825?v=4" height="150" width="150" /><br/>@us4c0d3<br/>Backend](https://github.com/us4c0d3) |
 
 </div>
-
