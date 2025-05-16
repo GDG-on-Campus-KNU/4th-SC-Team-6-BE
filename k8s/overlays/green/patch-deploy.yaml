@@ -1,7 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: spring-green
+  name: spring
+  namespace: default
 spec:
   selector:
     matchLabels:
