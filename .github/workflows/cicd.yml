@@ -141,7 +141,7 @@ jobs:
 
       - name: Apply deployment
         run: |
-          kubectl apply -k k8s/${{ steps.detect.outputs.target_color }}
+          kubectl apply -f k8s/${{ steps.detect.outputs.target_color }}/deploy.yaml
 
       - name: Install yq
         run: |
