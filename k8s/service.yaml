@@ -6,7 +6,7 @@ metadata:
 spec:
   selector:
     app: spring
-    color: PLACEHOLDER
+    color: blue
   ports:
     - port: 80
       targetPort: 8080

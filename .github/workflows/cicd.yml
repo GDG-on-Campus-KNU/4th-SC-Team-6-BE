@@ -133,10 +133,21 @@ jobs:
             echo "target_color=blue" >> $GITHUB_OUTPUT
           fi
 
-      - name: Apply New Version
+      - name: Set image in kustomize
         run: |
-          kubectl apply -k k8s/overlays/${{ steps.detect.outputs.target_color }}
-          kubectl apply -k k8s/base
+          cd k8s/${{ steps.detect.outputs.target_color }}
+          kustomize edit set image \
+            asia-northeast3-docker.pkg.dev/feelody-458710/feelody-backend=asia-northeast3-docker.pkg.dev/feelody-458710/feelody-backend:${{ needs.build-and-push.outputs.image_tag }}
+
+      - name: Apply deployment
+        run: |
+          kubectl apply -k k8s/${{ steps.detect.outputs.target_color }}
+
+      - name: Switch service selector to new color
+        run: |
+          NEW_COLOR=${{ steps.detect.outputs.target_color }}
+          sed -i "/spec:/,/selector:/s/color: .*/color: $NEW_COLOR/" k8s/service.yaml
+          kubectl apply -f k8s/service.yaml
 
       - name: Remove old deployment
         run: |
