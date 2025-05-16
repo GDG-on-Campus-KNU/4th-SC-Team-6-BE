@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-green
+spec:
+  selector:
+    matchLabels:
+      color: green
+  template:
+    metadata:
+      labels:
+        color: green
+    spec:
+      containers:
+        - name: feelody-back
+          image: asia-northeast3-docker.pkg.dev/feelody-458710/feelody-backend/feelody:green

@@ -1,7 +1,0 @@
-resources:
-  - deploy.yaml
-
-images:
-  - name: asia-northeast3-docker.pkg.dev/feelody-458710/feelody-backend
-    newTag: green
-

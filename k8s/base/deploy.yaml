@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: spring-blue
+  name: spring
   namespace: default
 spec:
   replicas: 2
   selector:
     matchLabels:
       app: spring
-      color: blue
+      color: PLACEHOLDER
   template:
     metadata:
       labels:
         app: spring
-        color: blue
+        color: PLACEHOLDER
     spec:
       serviceAccountName: feelody-k8s-sa
       containers:
         - name: feelody-back
-          image: asia-northeast3-docker.pkg.dev/feelody-458710/feelody-backend/feelody:blue
+          image: PLACEHOLDER
           ports:
             - containerPort: 8080
           readinessProbe:
@@ -28,4 +28,3 @@ spec:
             initialDelaySeconds: 5
             periodSeconds: 10
             failureThreshold: 3
-
